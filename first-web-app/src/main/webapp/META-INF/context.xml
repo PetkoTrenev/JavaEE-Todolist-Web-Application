@@ -1,4 +1,4 @@
-<Context>
+ <!-- <Context>
 
   <Resource name="jdbc/todo_app"
   			auth="Container" 
@@ -9,6 +9,6 @@
                username="root" 
                password="p3tkotrenev" 
                driverClassName="com.mysql.jdbc.Driver"
-               url="jdbc:mysql://localhost:3306/todo_app"/>
+               url="jdbc:mysql://localhost:3306/todo_app"/> 
 
-</Context>
+</Context> -->

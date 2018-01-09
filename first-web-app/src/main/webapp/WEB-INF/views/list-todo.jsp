@@ -41,11 +41,11 @@
 
 		<h2>Your Todos:</h2>
 		<table class="table table-striped">
-			<thead>
+			<tr>
 				<th>To Do Items</th>
 				<th>Category</th>
 				<th>Actions</th>
-			</thead>
+			</tr>
 			<tbody>
 			<c:forEach items="${todos}" var="todo">
 				<tr>

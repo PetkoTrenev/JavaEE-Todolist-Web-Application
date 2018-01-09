@@ -11,7 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
-import webapp.daos.TodoService;
+import webapp.daos.TodoDAO;
+import webapp.daos.TodoDAOFactory;
 import webapp.models.Todo;
 
 /*
@@ -36,34 +37,29 @@ import webapp.models.Todo;
 //4. How is the response created?
 
 @WebServlet(urlPatterns = "/add-todo.do")
-public class AddTodoServlet extends HttpServlet {
+public class AddTodoServlet extends HttpServlet
+{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	
-	private TodoService todoService = new TodoService(); 
-	
+
+	private TodoDAO todoService = TodoDAOFactory.getInstance();
+
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		request.getRequestDispatcher("/WEB-INF/views/add-todo.jsp").forward(request, response);
 	}
 
-
-
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
+	{
 		String newTodo = request.getParameter("todo");
 		String category = request.getParameter("category");
 		try {
 			todoService.addTodo(new Todo(newTodo, category));
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		// display new todos

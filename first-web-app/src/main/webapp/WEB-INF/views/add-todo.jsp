@@ -48,7 +48,6 @@
 			</fieldset>
 			<input name="add" type="submit" class="btn btn-success"/>
 		</form>
-		</div>
 	</div>
 
 	<footer class="footer">

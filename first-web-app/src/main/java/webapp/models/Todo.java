@@ -2,12 +2,39 @@ package webapp.models;
 
 public class Todo
 {
+	
+	private int id;
+	private Long userId;
 	private String name;
 	private String category;
-	
-	public Todo(String name, String category) {
+	private Priority priority;
+
+	public Todo(int id, Long userId, String name, String category, Priority priority) {
+		this.userId = userId;
+		this.id = id;
 		this.name = name;
 		this.category = category;
+		this.priority = priority;
+	}
+
+	public int getId()
+	{
+		return id;
+	}
+
+	public void setId(int id)
+	{
+		this.id = id;
+	}
+
+	public Long getUserId()
+	{
+		return userId;
+	}
+
+	public void setUserId(Long userId)
+	{
+		this.userId = userId;
 	}
 
 	public String getName()
@@ -47,6 +74,18 @@ public class Todo
 		return true;
 	}
 
+	public Priority getPriority()
+	{
+		return priority;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "Todo [userId=" + userId + ", id=" + id + ", name=" + name + ", category=" + category + ", priority="
+				+ priority + "]";
+	}
 	
 	
+
 }
