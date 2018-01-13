@@ -1,17 +1,18 @@
 package test.webapp;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import webapp.daos.TodoDAO;
 import webapp.daos.TodoDAOFactory;
+import webapp.daos.UserDAO;
+import webapp.daos.UserDAOFactory;
 import webapp.models.Priority;
 import webapp.models.Todo;
 import webapp.models.User;
@@ -21,13 +22,15 @@ public class TestTodoDAOImpl
 {	
 	
 	Connection conn = null;
-	TodoDAO dao = null;
+	TodoDAO todoDao = null;
+	UserDAO userDao = null;
 	
 	@Before
 	public void setUp() throws Exception
 	{
 		conn = DbUtil.getConnection();
-		dao = TodoDAOFactory.getInstance();
+		userDao = UserDAOFactory.getInstance();
+		todoDao = TodoDAOFactory.getInstance();
 	}
 	
 	@Test
@@ -37,29 +40,30 @@ public class TestTodoDAOImpl
 	}
 	
 	@Test
-	public void add_user_to_the_db()
+	public void add_todo_to_db() throws SQLException
 	{
-		List<Todo> todos = new ArrayList<>();
-		User user = new User(1l, "Gosho", "gosho@gmail.com", "p123", todos);
-		Todo todo = new Todo(3, user.getId(), "Clean up code", "Errand", Priority.MED);
+		User user = userDao.getUserById(1l);
+		
+		Todo todo = new Todo();
+		todo.setName("Swimming");
+		todo.setPriority(Priority.MED);
+		todo.setUser(user);
+		todo.setCategory("Fun");
+		
+		todoDao.addTodo(todo);
+		
 		try {
-			dao.addTodo(todo);
-		} catch (SQLException e) {
+			assertEquals(1, todoDao.getTodos().size());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 
 	@Test
 	public void test_get_all_todos()
 	{
-		try {
-			List<Todo> todos = dao.getTodos();
-			assertEquals(2, todos.size());
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		
 	}
 
 }

@@ -1,17 +1,30 @@
 package webapp.models;
 
+import java.util.Optional;
+
 public class Todo
 {
-	
+
 	private int id;
-	private Long userId;
+
+	// A user can only be get but not set from the todo list
+	private User user;
 	private String name;
 	private String category;
 	private Priority priority;
 
-	public Todo(int id, Long userId, String name, String category, Priority priority) {
-		this.userId = userId;
+	public Todo(int id, User user, String name, String category, Priority priority) {
+		this.user = user;
 		this.id = id;
+		this.name = name;
+		this.category = category;
+		this.priority = priority;
+	}
+
+	public Todo() {
+	}
+
+	public Todo(User user, String name, String category, Priority priority) {
 		this.name = name;
 		this.category = category;
 		this.priority = priority;
@@ -27,14 +40,29 @@ public class Todo
 		this.id = id;
 	}
 
-	public Long getUserId()
+	public void setName(String name)
 	{
-		return userId;
+		this.name = name;
 	}
 
-	public void setUserId(Long userId)
+	public User getUser()
 	{
-		this.userId = userId;
+		return user;
+	}
+
+	public void setUser(User user)
+	{
+		this.user = user;
+	}
+
+	public void setCategory(String category)
+	{
+		this.category = category;
+	}
+
+	public void setPriority(Priority priority)
+	{
+		this.priority = priority;
 	}
 
 	public String getName()
@@ -45,6 +73,11 @@ public class Todo
 	public String getCategory()
 	{
 		return category;
+	}
+
+	public Priority getPriority()
+	{
+		return priority;
 	}
 
 	@Override
@@ -74,18 +107,11 @@ public class Todo
 		return true;
 	}
 
-	public Priority getPriority()
-	{
-		return priority;
-	}
-
 	@Override
 	public String toString()
 	{
-		return "Todo [userId=" + userId + ", id=" + id + ", name=" + name + ", category=" + category + ", priority="
-				+ priority + "]";
+		return "Todo [userId=" + user + ", id=" + id + ", name=" + name + ", category=" + category
+				+ ", priority=" + priority + "]";
 	}
-	
-	
 
 }

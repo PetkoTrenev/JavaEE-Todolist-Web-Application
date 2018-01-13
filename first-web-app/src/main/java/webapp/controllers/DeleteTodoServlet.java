@@ -2,14 +2,16 @@ package webapp.controllers;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import webapp.daos.TodoService;
+import webapp.daos.TodoDAO;
+import webapp.daos.TodoDAOFactory;
 import webapp.models.Todo;
+import webapp.models.User;
 
 /*
  * Browser sends Http Request to Web Server
@@ -20,18 +22,6 @@ import webapp.models.Todo;
  * Web Server responds with Http Response
  */
 
-//Java Platform, Enterprise Edition (Java EE) JEE6
-
-//Servlet is a Java programming language class 
-//used to extend the capabilities of servers 
-//that host applications accessed by means of 
-//a request-response programming model.
-
-//1. extends javax.servlet.http.HttpServlet
-//2. @WebServlet(urlPatterns = "/login.do")
-//3. doGet(HttpServletRequest request, HttpServletResponse response)
-//4. How is the response created?
-
 @WebServlet(urlPatterns = "/delete-todo.do")
 public class DeleteTodoServlet extends HttpServlet {
 
@@ -40,16 +30,14 @@ public class DeleteTodoServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private TodoService todoService = new TodoService(); 
+	private TodoDAO todoDao = TodoDAOFactory.getInstance();
 	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		try {
-			todoService.deleteTodo(new Todo(request.getParameter("todo"), request.getParameter("category")));
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+		//todoDao.deleteTodo(new Todo(request.getParameter("todo"), user, request.getParameter("name"), 
+				//request.getParameter("category"), request.getParameter("priority"));
 		// display remaining todos
 		response.sendRedirect("/list-todo.do");
 	}

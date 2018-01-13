@@ -5,120 +5,175 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
-import java.util.Optional;
-
+import webapp.models.Priority;
+import webapp.models.Todo;
 import webapp.models.User;
 import webapp.util.DbUtil;
 
 public class UserDAOImpl implements UserDAO
 {
 
-	private static final String READ_USER_BY_ID = "SELECT * FROM USER WHERE ID=?";
+	private static final String READ_USER_BY_ID = "SELECT * FROM USER WHERE id=?";
 
-	private static final String UPDATE_USER_INFO_BY_ID = "UPDATE USER SET name = ?, email = ? " 
-			+ "WHERE ID = ?";
-	
+	private static final String UPDATE_USER_INFO_BY_ID = "UPDATE USER SET name = ?, email = ? " + "WHERE ID = ?";
+
 	private static final String UPDATE_USER_PASSWORD = "UPDATE USER SET password = ? WHERE ID = ?";
+
+	private static final String INSERT_INTO_USER = "INSERT INTO USER (name, email, password)" + "VALUES (?, ?, ?)";
+
+	private static final String DELETE_USER_WITH_ID = "DELETE FROM USER WHERE ID = ?";
+
+	private static final String CHECK_LOGIN_USING_USERNAME_PASSWORD = "SELECT * FROM USER WHERE name = ? and password = ?";
+
+	private static final String GET_USER_TODOS = "SELECT * FROM todo WHERE userId = ?";
+
+	private static final String GET_TOTAL_USERS = "SELECT COUNT(*) FROM USER";
 	
+	//private static final String GET_USER_BY_NAME_AND_PASS = "SELECT * FROM USER WHERE name = ? and password = ?";
+
 	Connection conn = null;
 
 	public UserDAOImpl() {
 		conn = DbUtil.getConnection();
 	}
+	
+//	public User getUser(String username, String password) throws SQLException {
+//		try (PreparedStatement ps = conn.prepareStatement(GET_USER_BY_NAME_AND_PASS))
+//		{
+//			ps.setString(1, username);
+//			ps.setString(2, password);
+//			
+//			try (ResultSet rs = ps.executeQuery())
+//			{
+//				User user = new User();
+//				user.setId(rs.getLong("id"));
+//				user.setName(rs.getString("name"));
+//				user.setPassword(rs.getString("password"));
+//				user.setEmail(rs.getString("email"));
+//				
+//				return user;
+//			}
+//		}
+//	}
+
+	public int getTotalUsers() throws SQLException
+	{
+		try (PreparedStatement ps = conn.prepareStatement(GET_TOTAL_USERS)) {
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				int numberOfRows = rs.getInt(1);
+				return numberOfRows;
+			}
+		}
+		return 0;
+	}
 
 	@Override
-	public Optional<User> getUserById(Long id) throws Exception
+	public User getUserById(Long userId) throws SQLException
 	{
-		try (PreparedStatement statement = conn.prepareStatement(READ_USER_BY_ID)) {
-			statement.setLong(1, id);
-			ResultSet resultSet = statement.executeQuery();
-			if (resultSet.next()) {
-				return Optional.of(createUser(resultSet));
-			} else {
-				return Optional.empty();
+		try (PreparedStatement ps = conn.prepareStatement(READ_USER_BY_ID)) {
+
+			ps.setLong(1, userId);
+
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					Long id = rs.getLong("id");
+					String name = rs.getString("name");
+					String email = rs.getString("email");
+					String password = rs.getString("password");
+
+					return new User(id, name, email, password);
+				}
+
+				return null;
 			}
-		} catch (SQLException ex) {
-			throw new Exception(ex.getMessage(), ex);
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private User createUser(ResultSet rs) throws SQLException
-	{
-		int COLUMN_INDEX = 5;
-		return new User(rs.getLong("id"), rs.getString("name"), rs.getString("email"),
-				rs.getString("password"), rs.getObject(COLUMN_INDEX, ArrayList.class));
-	}
-
-
 	@Override
-	public boolean login(String email, String password)
+	public User login(String username, String password) throws SQLException
 	{
-		// TODO Auto-generated method stub
-		return false;
-	}
+		try (PreparedStatement ps = conn.prepareStatement(CHECK_LOGIN_USING_USERNAME_PASSWORD);) {
+			ps.setString(1, username);
+			ps.setString(2, password);
 
-	@Override
-	public User create(User user)
-	{
-		// TODO Auto-generated method stub
-		return null;
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					Long id = rs.getLong("id");
+					String name = rs.getString("name");
+					String userPass = rs.getString("password");
+					String email = rs.getString("email");
+					User user = new User(id, name, userPass, email);
+					return user;
+				}
+			}
+			return null;
+		}
 	}
 
 	@Override
-	public User updateUserInfo(User user)
+	public void create(User user) throws SQLException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		try (PreparedStatement ps = conn.prepareStatement(INSERT_INTO_USER);) {
+			ps.setString(1, user.getName());
+			ps.setString(2, user.getEmail());
+			ps.setString(3, user.getPassword());
+			ps.executeUpdate();
+		}
 	}
 
 	@Override
-	public User updateUserPassword(User user)
+	public void updateUserInfo(User user) throws SQLException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		try (PreparedStatement ps = conn.prepareStatement(UPDATE_USER_INFO_BY_ID);) {
+			ps.setLong(3, user.getId());
+			ps.setString(1, user.getName());
+			ps.setString(2, user.getEmail());
+			ps.executeUpdate();
+		}
 	}
 
 	@Override
-	public User delete(User user)
+	public void updateUserPassword(User user) throws SQLException
 	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/*@Override
-	public User update(User user)
-	{
-		
+		try (PreparedStatement ps = conn.prepareStatement(UPDATE_USER_PASSWORD);) {
+			ps.setString(1, user.getPassword());
+			ps.setLong(2, user.getId());
+			ps.executeUpdate();
+		}
 	}
 
 	@Override
-	public User delete(User user)
+	public void delete(User user) throws SQLException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		try (PreparedStatement ps = conn.prepareStatement(DELETE_USER_WITH_ID);) {
+			ps.setLong(1, user.getId());
+			ps.executeUpdate();
+		}
 	}
 
-	@Override
-	public User create(User user)
+	public List<Todo> getUserTodos(User user) throws SQLException
 	{
-		// TODO Auto-generated method stub
-		return null;
-	}
+		List<Todo> todos = new ArrayList<>();
 
-	@Override
-	public User updateUserInfo(User user)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
+		try (PreparedStatement ps = conn.prepareStatement(GET_USER_TODOS)) {
+			ps.setLong(1, user.getId());
 
-	@Override
-	public User updateUserPassword(User user)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	} */
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					int id = rs.getInt("id");
+					String name = rs.getString("name");
+					String category = rs.getString("category");
+					Priority priority = Priority.ofCode(rs.getInt("priority"));
+
+					todos.add(new Todo(id, user, name, category, priority));
+				}
+			}
+		}
+
+		return todos;
+	}
 
 }

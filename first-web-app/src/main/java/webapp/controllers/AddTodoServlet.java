@@ -3,17 +3,19 @@ package webapp.controllers;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
 
 import webapp.daos.TodoDAO;
 import webapp.daos.TodoDAOFactory;
+import webapp.daos.UserDAO;
+import webapp.daos.UserDAOFactory;
+import webapp.models.Priority;
 import webapp.models.Todo;
+import webapp.models.User;
 
 /*
  * Browser sends Http Request to Web Server
@@ -42,7 +44,8 @@ public class AddTodoServlet extends HttpServlet
 
 	private static final long serialVersionUID = 1L;
 
-	private TodoDAO todoService = TodoDAOFactory.getInstance();
+	private TodoDAO todoDao = TodoDAOFactory.getInstance();
+	private UserDAO userDao = UserDAOFactory.getInstance();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -55,10 +58,12 @@ public class AddTodoServlet extends HttpServlet
 	{
 		String newTodo = request.getParameter("todo");
 		String category = request.getParameter("category");
+		String code = request.getParameter("priority");
+		
 		try {
-			todoService.addTodo(new Todo(newTodo, category));
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			User user = (User) request.getSession().getAttribute("user");
+			User wantedUser = userDao.getUserById(user.getId());
+			todoDao.addTodo(new Todo(wantedUser, newTodo, category, Priority.valueOf(code)));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

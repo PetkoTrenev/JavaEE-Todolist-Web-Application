@@ -5,19 +5,23 @@ public enum Priority {
 	MED(2),
 	HIGH(3);
 	
-	private int priority;
+	private final int code;
 	
-	Priority(int priority) {
-		this.priority = priority;
+	Priority(int code) {
+		this.code = code;
 	}
 
-	public int getPriority() {
-		return priority;
-	}
-
-	public void setPriority(int priority) {
-		this.priority = priority;
+	public int getCode() {
+		return code;
 	}
 	
-	
+	public static Priority ofCode(int code) {
+		for (Priority p : Priority.values()) {
+			if (p.getCode() == code) {
+				return p;
+			}
+		}
+		
+		throw new IllegalArgumentException("Unknown code");
+	}
 }

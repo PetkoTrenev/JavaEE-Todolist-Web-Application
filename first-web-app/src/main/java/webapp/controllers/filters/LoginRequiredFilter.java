@@ -27,11 +27,12 @@ public class LoginRequiredFilter implements Filter
 	{
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		//System.out.println(request.getRequestURI());
-		if (request.getSession().getAttribute("name") != null) {			
+		if (request.getSession().getAttribute("userId") != null) {			
 			chain.doFilter(servletRequest, servletResponse);
 		} else {
 			// redirect to login page
-			request.getRequestDispatcher("/login.do").forward(servletRequest, servletResponse);
+			//request.getRequestDispatcher("/login.do").forward(servletRequest, servletResponse);
+			request.getRequestDispatcher("welcome.jsp").forward(servletRequest, servletResponse);
 		}
 		
 	}

@@ -30,6 +30,7 @@
 		</ul>
 
 		<ul class="nav navbar-nav navbar-right">
+			<li><a href="register.html">Register</a></li>
 			<li><a href="/login.do">Login</a></li>
 		</ul>
 
@@ -38,7 +39,7 @@
 	<div class="container">
 		<form action="/login.do" method="POST">
 			<p><font color="red">${errorMessage}</font></p>
-			Username: <input type="text" name="name"/>
+			Username: <input type="text" name="username"/>
 			<br/>
 			Password: <input type="password" name="password"/>
 			<br/>

@@ -11,7 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
-import webapp.daos.TodoService;
+import webapp.daos.TodoDAO;
+import webapp.daos.TodoDAOFactory;
 import webapp.models.Todo;
 
 /*
@@ -42,8 +43,8 @@ public class ListTodoServlet extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	private TodoService todoService = new TodoService();
+	
+	TodoDAO todoDao = TodoDAOFactory.getInstance();
 	
 	@Resource(name="/todo_app")
 	private DataSource datasource;
@@ -53,16 +54,13 @@ public class ListTodoServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
 			try {
-				request.setAttribute("todos", todoService.getTodos());
-			} catch (ClassNotFoundException e) {
+				request.setAttribute("todos", todoDao.getTodos());
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			request.getRequestDispatcher("WEB-INF/views/list-todo.jsp").forward(request, response);
 		} catch (ServletException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
