@@ -16,6 +16,7 @@ import webapp.daos.UserDAOFactory;
 import webapp.models.Priority;
 import webapp.models.Todo;
 import webapp.models.User;
+import webapp.util.Constants;
 
 /*
  * Browser sends Http Request to Web Server
@@ -26,19 +27,7 @@ import webapp.models.User;
  * Web Server responds with Http Response
  */
 
-//Java Platform, Enterprise Edition (Java EE) JEE6
-
-//Servlet is a Java programming language class 
-//used to extend the capabilities of servers 
-//that host applications accessed by means of 
-//a request-response programming model.
-
-//1. extends javax.servlet.http.HttpServlet
-//2. @WebServlet(urlPatterns = "/login.do")
-//3. doGet(HttpServletRequest request, HttpServletResponse response)
-//4. How is the response created?
-
-@WebServlet(urlPatterns = "/add-todo.do")
+@WebServlet(urlPatterns = Constants.Pages.ADD_TODO)
 public class AddTodoServlet extends HttpServlet
 {
 
@@ -50,7 +39,7 @@ public class AddTodoServlet extends HttpServlet
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		request.getRequestDispatcher("/WEB-INF/views/add-todo.jsp").forward(request, response);
+		request.getRequestDispatcher(Constants.Views.ADD_TODO).forward(request, response);
 	}
 
 	@Override
@@ -58,16 +47,17 @@ public class AddTodoServlet extends HttpServlet
 	{
 		String newTodo = request.getParameter("todo");
 		String category = request.getParameter("category");
-		String code = request.getParameter("priority");
-		
+		Priority priority = Priority.valueOf(request.getParameter("priority"));
+
+		System.out.println(priority);
 		try {
-			User user = (User) request.getSession().getAttribute("user");
-			User wantedUser = userDao.getUserById(user.getId());
-			todoDao.addTodo(new Todo(wantedUser, newTodo, category, Priority.valueOf(code)));
+			Long userId = (Long) request.getSession().getAttribute("userId");
+			User wantedUser = userDao.getUserById(userId);
+			todoDao.addTodo(new Todo(wantedUser, newTodo, category, priority));
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		// display new todos
-		response.sendRedirect("/list-todo.do");
+		response.sendRedirect(Constants.Pages.LIST_TODOS_BY_USER);
 	}
 }

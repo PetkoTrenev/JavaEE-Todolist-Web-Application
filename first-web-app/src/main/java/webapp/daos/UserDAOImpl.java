@@ -31,33 +31,12 @@ public class UserDAOImpl implements UserDAO
 
 	private static final String GET_TOTAL_USERS = "SELECT COUNT(*) FROM USER";
 	
-	//private static final String GET_USER_BY_NAME_AND_PASS = "SELECT * FROM USER WHERE name = ? and password = ?";
-
 	Connection conn = null;
 
 	public UserDAOImpl() {
 		conn = DbUtil.getConnection();
 	}
 	
-//	public User getUser(String username, String password) throws SQLException {
-//		try (PreparedStatement ps = conn.prepareStatement(GET_USER_BY_NAME_AND_PASS))
-//		{
-//			ps.setString(1, username);
-//			ps.setString(2, password);
-//			
-//			try (ResultSet rs = ps.executeQuery())
-//			{
-//				User user = new User();
-//				user.setId(rs.getLong("id"));
-//				user.setName(rs.getString("name"));
-//				user.setPassword(rs.getString("password"));
-//				user.setEmail(rs.getString("email"));
-//				
-//				return user;
-//			}
-//		}
-//	}
-
 	public int getTotalUsers() throws SQLException
 	{
 		try (PreparedStatement ps = conn.prepareStatement(GET_TOTAL_USERS)) {

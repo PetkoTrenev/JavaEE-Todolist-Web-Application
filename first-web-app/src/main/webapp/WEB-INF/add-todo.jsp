@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@page import="webapp.util.Constants"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,44 +26,37 @@
 
 		<ul class="nav navbar-nav">
 			<li class="active"><a href="#">Home</a></li>
-			<li><a href="/list-todo.do">Todos</a></li>
+			<li><a href="<%= Constants.Pages.LIST_TODOS_BY_USER %>">Todos</a></li>
 			<li><a href="http://www.teamliquid.net/" target="_blank">Streaming Service</a></li>
 		</ul>
 
 		<ul class="nav navbar-nav navbar-right">
-			<li><a href="/logout.do">Logout</a></li>
+			<li><a href="<%= Constants.Pages.LOGOUT %>">Logout</a></li>
 		</ul>
 
 	</nav>
 
 	<div class="container">
-		<div class="container">
-		<h1>Welcome ${name}</h1>
-
-		<h2>Your Todos:</h2>
-		<table class="table table-striped">
-			<tr>
-				<th>To Do Items</th>
-				<th>Category</th>
-				<th>Actions</th>
-			</tr>
-			<tbody>
-			<c:forEach items="${todos}" var="todo">
-				<tr>
-					<td>${todo.name}</td>
-					<td>${todo.category}</td>
-					<td><a class="btn btn-danger" href="/delete-todo.do?todo=${todo.name}&category=${todo.category}">Delete</a></td>
-				</tr>
-			</c:forEach>
-			</tbody>
-			
-		</table>
-
-		<p>
-			<font color="red">${errorMessage}</font>
-		</p>
-		<a class="btn btn-success" href="/add-todo.do">Add a new item to the list</a>
-		</div>
+		Your New Action Item
+		<form method="POST" action="<%= Constants.Pages.ADD_TODO %>">
+			<fieldset>
+				<label>New Todo:</label>
+				<input name="todo" type="text" class="form-control"/> <br/>
+			</fieldset>
+			<fieldset>
+				<label>Category:</label>
+				<input name="category" type="text" class="form-control"/> <br/>
+			</fieldset>
+			<fieldset>
+				<label>Priority:</label>
+				<select id="priority" name="priority" class="form-control">
+					<option>LOW</option>
+					<option>MED</option>
+					<option>HIGH</option>
+				</select>
+			</fieldset>
+			<input name="add" type="submit" class="btn btn-success"/>
+		</form>
 	</div>
 
 	<footer class="footer">

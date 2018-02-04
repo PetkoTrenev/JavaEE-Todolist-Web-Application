@@ -1,6 +1,5 @@
 package webapp.models;
 
-import java.util.Optional;
 
 public class Todo
 {
@@ -14,8 +13,8 @@ public class Todo
 	private Priority priority;
 
 	public Todo(int id, User user, String name, String category, Priority priority) {
-		this.user = user;
 		this.id = id;
+		this.user = user;
 		this.name = name;
 		this.category = category;
 		this.priority = priority;
@@ -25,6 +24,7 @@ public class Todo
 	}
 
 	public Todo(User user, String name, String category, Priority priority) {
+		this.user = user;
 		this.name = name;
 		this.category = category;
 		this.priority = priority;
@@ -110,7 +110,7 @@ public class Todo
 	@Override
 	public String toString()
 	{
-		return "Todo [userId=" + user + ", id=" + id + ", name=" + name + ", category=" + category
+		return "Todo [user=" + user + ", id=" + id + ", name=" + name + ", category=" + category
 				+ ", priority=" + priority + "]";
 	}
 

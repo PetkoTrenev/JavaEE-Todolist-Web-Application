@@ -17,10 +17,7 @@ public class DbUtil
 			try {
 				ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 				InputStream stream = classLoader.getResourceAsStream("db.properties");
-				/*
-				 * InputStream inputStream = DbUtil.class.getClassLoader()
-				 * .getResourceAsStream("/src/main/resources/db.properties");
-				 */
+
 				Properties properties = new Properties();
 				if (properties != null) {
 					properties.load(stream);
@@ -34,7 +31,7 @@ public class DbUtil
 					dbConnection = DriverManager.getConnection(connectionUrl, userName, password);
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 			return dbConnection;
 		}

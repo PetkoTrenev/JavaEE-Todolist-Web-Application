@@ -15,5 +15,4 @@ public interface UserDAO {
 	User getUserById(Long userId) throws SQLException;
 	public List<Todo> getUserTodos(User user) throws SQLException;
 	public int getTotalUsers() throws SQLException;
-	//public User getUser(String username, String password) throws SQLException;
 }

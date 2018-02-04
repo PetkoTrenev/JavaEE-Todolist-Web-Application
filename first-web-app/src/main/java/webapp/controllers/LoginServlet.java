@@ -1,7 +1,6 @@
 package webapp.controllers;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,49 +11,44 @@ import javax.servlet.http.HttpServletResponse;
 import webapp.daos.UserDAO;
 import webapp.daos.UserDAOFactory;
 import webapp.models.User;
+import webapp.util.Constants;
 
-@WebServlet(urlPatterns = "/login.do")
+@WebServlet(urlPatterns = Constants.Pages.LOGIN)
 public class LoginServlet extends HttpServlet
 {
 
 	/**
-	 * 
+	 * Serial ID
 	 */
 	private static final long serialVersionUID = 1L;
 
 	private UserDAO userDao = UserDAOFactory.getInstance();
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
-		try {
-			request.getRequestDispatcher("WEB-INF/views/login.jsp").forward(request, response);
-		} catch (ServletException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		request.getRequestDispatcher(Constants.Views.LOGIN).forward(request, response);
 	}
 
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException
 	{
 		try {
 			String username = request.getParameter("username");
 			String password = request.getParameter("password");
-			
+
 			User validUser = userDao.login(username, password);
-			
+
 			if (validUser != null) {
-				request.getSession().setAttribute("userId", validUser.getId());				
-				response.sendRedirect("/list-todo.do");
+				request.getSession().setAttribute("userId", validUser.getId());
+				response.sendRedirect(Constants.Pages.LIST_TODOS_BY_USER);
 			} else {
-				//request.setAttribute("errorMessage", "Invalid Credentials!");
-				//request.getRequestDispatcher("WEB-INF/views/login.jsp").forward(request, response);
-				response.sendRedirect("welcome.jsp");
+				request.setAttribute("errorMessage", "Invalid Credentials!");
+				request.getRequestDispatcher(Constants.Views.LOGIN).forward(request, response);
 			}
 
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 }

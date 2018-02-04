@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@page import="webapp.util.Constants"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,25 +26,25 @@
 
 		<ul class="nav navbar-nav">
 			<li class="active"><a href="#">Home</a></li>
-			<li><a href="/list-todo.do">Todos</a></li>
+			<li><a href="<%= Constants.Pages.LIST_TODOS_BY_USER %>">Todos</a></li>
 			<li><a href="http://udemy.com/">Udemy</a></li>
 		</ul>
 
 		<ul class="nav navbar-nav navbar-right">
-			<li><a href="register.html">Register</a></li>
-			<li><a href="/login.do">Login</a></li>
+			<li><a href="<%= Constants.Pages.REGISTER %>">Register</a></li>
+			<li><a href="<%= Constants.Pages.LOGIN %>">Login</a></li>
 		</ul>
 
 	</nav>
 
 	<div class="container">
-		<form action="/login.do" method="POST">
+		<form action="<%= Constants.Pages.LOGIN %>" method="POST">
 			<p><font color="red">${errorMessage}</font></p>
 			Username: <input type="text" name="username"/>
 			<br/>
 			Password: <input type="password" name="password"/>
 			<br/>
-			<input type="Submit" />
+			<input type="Submit" value="Submit"/>
 		</form>
 	</div>
 

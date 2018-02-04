@@ -8,25 +8,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(urlPatterns = "/logout.do")
+import webapp.util.Constants;
+
+@WebServlet(urlPatterns = Constants.Pages.LOGOUT)
 public class LogoutServlet extends HttpServlet
 {
 
 	/**
-	 * 
+	 * Serial ID
 	 */
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
-		try {
-			// TODO: Ask if I have to remove the username as well ?
-			request.getSession().invalidate();
-			request.getRequestDispatcher("WEB-INF/views/login.jsp").forward(request, response);
-		} catch (ServletException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		request.getSession().invalidate();
+		request.getRequestDispatcher(Constants.Views.LOGIN).forward(request, response);
+
 	}
 }

@@ -12,48 +12,55 @@ import javax.servlet.http.HttpServletResponse;
 import webapp.daos.UserDAO;
 import webapp.daos.UserDAOFactory;
 import webapp.models.User;
+import webapp.util.Constants;
 
 /**
  * Servlet implementation class RegisterServlet
  */
-@WebServlet(urlPatterns = "/reg.do")
-public class RegisterServlet extends HttpServlet {
+@WebServlet(urlPatterns = Constants.Pages.REGISTER)
+public class RegisterServlet extends HttpServlet
+{
 	private static final long serialVersionUID = 1L;
-	
+
 	private UserDAO userDao = UserDAOFactory.getInstance();
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public RegisterServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+	public RegisterServlet() {
+		super();
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		request.getRequestDispatcher(Constants.Views.REGISTER).forward(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		String email = request.getParameter("email");
-		
+
 		try {
 			userDao.create(new User(username, password, email));
+			User loggedInUser = userDao.login(username, password);
+			request.getSession().setAttribute("userId", loggedInUser.getId());
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
-		
-		response.sendRedirect("/welcome.jsp");
+
+		response.sendRedirect(Constants.Pages.LIST_TODOS_BY_USER);
 	}
 
 }
