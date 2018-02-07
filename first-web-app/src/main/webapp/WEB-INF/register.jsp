@@ -14,6 +14,7 @@
 			<label>Password:</label> <input type="password" name="password" /> <br />
 			<label>Email:</label> <input type="text" name="email" /> <br /> <input
 				type="submit" value="Register" />
+			<p><font color="red">${errorMessage}</font></p>
 		</form>
 	</div>
 </body>

@@ -17,6 +17,8 @@ public class UserDAOImpl implements UserDAO
 
 	private static final String READ_USER_BY_ID = "SELECT * FROM USER WHERE id=?";
 
+	private static final String USER_EMAIL = "SELECT * FROM USER where email = ?";
+
 	private static final String UPDATE_USER_INFO_BY_ID = "UPDATE USER SET name = ?, email = ? " + "WHERE ID = ?";
 
 	private static final String UPDATE_USER_PASSWORD = "UPDATE USER SET password = ? WHERE ID = ?";
@@ -30,13 +32,14 @@ public class UserDAOImpl implements UserDAO
 	private static final String GET_USER_TODOS = "SELECT * FROM todo WHERE userId = ?";
 
 	private static final String GET_TOTAL_USERS = "SELECT COUNT(*) FROM USER";
-	
+
 	Connection conn = null;
 
 	public UserDAOImpl() {
 		conn = DbUtil.getConnection();
 	}
-	
+
+	@Override
 	public int getTotalUsers() throws SQLException
 	{
 		try (PreparedStatement ps = conn.prepareStatement(GET_TOTAL_USERS)) {
@@ -47,6 +50,20 @@ public class UserDAOImpl implements UserDAO
 			}
 		}
 		return 0;
+	}
+
+	@Override
+	public boolean userAlreadyHasEmail(String email) throws SQLException
+	{
+		try (PreparedStatement ps = conn.prepareStatement(USER_EMAIL)) {
+			ps.setString(1, email);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -133,6 +150,7 @@ public class UserDAOImpl implements UserDAO
 		}
 	}
 
+	@Override
 	public List<Todo> getUserTodos(User user) throws SQLException
 	{
 		List<Todo> todos = new ArrayList<>();

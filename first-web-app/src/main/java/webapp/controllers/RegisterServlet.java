@@ -53,14 +53,23 @@ public class RegisterServlet extends HttpServlet
 		String email = request.getParameter("email");
 
 		try {
-			userDao.create(new User(username, password, email));
-			User loggedInUser = userDao.login(username, password);
-			request.getSession().setAttribute("userId", loggedInUser.getId());
+
+			if (userDao.userAlreadyHasEmail(email)) {
+				request.setAttribute("errorMessage", "Email taken");
+				request.getRequestDispatcher(Constants.Views.REGISTER).forward(request, response);
+			}
+
+			else {
+				userDao.create(new User(username, password, email));
+				User loggedInUser = userDao.login(username, password);
+				request.getSession().setAttribute("userId", loggedInUser.getId());
+				response.sendRedirect(Constants.Pages.LIST_TODOS_BY_USER);
+			}
+
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 
-		response.sendRedirect(Constants.Pages.LIST_TODOS_BY_USER);
 	}
 
 }

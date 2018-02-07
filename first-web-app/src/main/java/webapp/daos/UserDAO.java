@@ -15,4 +15,5 @@ public interface UserDAO {
 	User getUserById(Long userId) throws SQLException;
 	public List<Todo> getUserTodos(User user) throws SQLException;
 	public int getTotalUsers() throws SQLException;
+	boolean userAlreadyHasEmail(String email) throws SQLException;
 }
