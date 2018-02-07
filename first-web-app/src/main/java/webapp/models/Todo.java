@@ -1,12 +1,10 @@
 package webapp.models;
 
-
 public class Todo
 {
 
 	private int id;
 
-	// A user can only be get but not set from the todo list
 	private User user;
 	private String name;
 	private String category;
@@ -21,6 +19,14 @@ public class Todo
 	}
 
 	public Todo() {
+	}
+
+	public Todo(int id, String name, String category, Priority priority) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.category = category;
+		this.priority = priority;
 	}
 
 	public Todo(User user, String name, String category, Priority priority) {
@@ -110,8 +116,8 @@ public class Todo
 	@Override
 	public String toString()
 	{
-		return "Todo [user=" + user + ", id=" + id + ", name=" + name + ", category=" + category
-				+ ", priority=" + priority + "]";
+		return "Todo [user=" + user + ", id=" + id + ", name=" + name + ", category=" + category + ", priority="
+				+ priority + "]";
 	}
 
 }

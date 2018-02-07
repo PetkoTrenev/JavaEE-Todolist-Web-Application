@@ -19,6 +19,8 @@ public class Constants
 
 		public static final String LIST_TODOS_BY_USER = PREFIX + "/list-todo.jsp";
 
+		public static final String UPDATE_TODO = PREFIX + "/update-todo.jsp";
+
 	}
 
 	public static class Pages
@@ -39,6 +41,8 @@ public class Constants
 		public static final String LOGOUT = "/logout.do";
 
 		public static final String DELETE_TODO = "/delete-todo.do";
+
+		public static final String UPDATE_TODO = "/update-todo.do";
 	}
 
 }

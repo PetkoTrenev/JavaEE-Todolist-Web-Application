@@ -33,6 +33,8 @@ public class TodoDAOImpl implements TodoDAO
 
 	private static final String SELECT_TODOS_FOR_USER = "select * from test.todo where userId = ?";
 
+	private static final String GET_TODO_BY_ID = "SELECT * from test.todo where id = ? and userId = ?";
+
 	// TODO: Those have to be private ?
 	Connection conn = null;
 
@@ -65,6 +67,22 @@ public class TodoDAOImpl implements TodoDAO
 
 		}
 		return todos;
+	}
+
+	@Override
+	public Todo getTodoByIdAndUserId(int todoId, long userId) throws SQLException
+	{
+		try (PreparedStatement ps = conn.prepareStatement(GET_TODO_BY_ID)) {
+			ps.setInt(1, todoId);
+			ps.setLong(2, userId);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					return mapResultSetToTodo(rs);
+				}
+			}
+		}
+
+		return null;
 	}
 
 	private Todo mapResultSetToTodo(ResultSet rs) throws SQLException
@@ -144,7 +162,6 @@ public class TodoDAOImpl implements TodoDAO
 	public void updateTodo(Todo todo) throws SQLException
 	{
 		try (PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_TODO_QUERY)) {
-
 			preparedStatement.setString(1, todo.getName());
 			preparedStatement.setString(2, todo.getCategory());
 			preparedStatement.setInt(3, todo.getPriority().getCode());

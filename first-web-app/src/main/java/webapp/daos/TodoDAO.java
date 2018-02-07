@@ -13,4 +13,5 @@ public interface TodoDAO {
 	public void updateTodo(Todo todo) throws SQLException;
 	public List<Todo> getTodosByUser(User user) throws SQLException;
 	void deleteTodoByIdAndUserId(int todoId, long userId) throws SQLException;
+	Todo getTodoByIdAndUserId(int todoId, long userId) throws SQLException;
 }
