@@ -49,7 +49,6 @@ public class AddTodoServlet extends HttpServlet
 		String category = request.getParameter("category");
 		Priority priority = Priority.valueOf(request.getParameter("priority"));
 
-		System.out.println(priority);
 		try {
 			Long userId = (Long) request.getSession().getAttribute("userId");
 			User wantedUser = userDao.getUserById(userId);

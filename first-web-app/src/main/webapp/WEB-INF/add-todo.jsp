@@ -41,11 +41,11 @@
 		<form method="POST" action="<%= Constants.Pages.ADD_TODO %>">
 			<fieldset>
 				<label>New Todo:</label>
-				<input name="todo" type="text" class="form-control"/> <br/>
+				<input name="todo" type="text" class="form-control" required/> <br/>
 			</fieldset>
 			<fieldset>
 				<label>Category:</label>
-				<input name="category" type="text" class="form-control"/> <br/>
+				<input name="category" type="text" class="form-control" required/> <br/>
 			</fieldset>
 			<fieldset>
 				<label>Priority:</label>
@@ -55,7 +55,7 @@
 					<option>HIGH</option>
 				</select>
 			</fieldset>
-			<input name="add" type="submit" class="btn btn-success"/>
+			<input name="add" type="submit" class="btn btn-success" value="Submit"/>
 		</form>
 	</div>
 

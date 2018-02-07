@@ -4,9 +4,9 @@ use test;
 
 CREATE TABLE user (
   id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  name varchar(32) DEFAULT NULL,
+  name varchar(32) NOT NULL,
   email varchar(32) NOT NULL,
-  password varchar(32) DEFAULT NULL
+  password varchar(32) NOT NULL
 );
 
 ALTER TABLE user ADD CONSTRAINT unique_email UNIQUE (email);
@@ -14,7 +14,7 @@ ALTER TABLE user ADD CONSTRAINT unique_email UNIQUE (email);
 CREATE TABLE todo (
   id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
   userId BIGINT NOT NULL,
-  name varchar(512) DEFAULT NULL,
+  name varchar(512) NOT NULL,
   category varchar(255),
   priority tinyint NOT NULL
 );
